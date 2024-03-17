@@ -1,7 +1,7 @@
 <?php
+// user_upload.php
 
-
-// Command line arguments options
+// Defining command line short and long options
 $options = getopt("u:p:h:", ["file:", "create_table", "dry_run", "help", "database:"]);
 
 // If help option is provided 
@@ -17,7 +17,7 @@ if (isset($options['help'])) {
     echo "  --database               MySQL database name\n";
     exit;
 }
-// The function to create the users table
+// The function to create the MySQL users table if it does not already exist
 function createTable($mysqli) {
     $sql = "CREATE TABLE IF NOT EXISTS users (
         name VARCHAR(50) NOT NULL,
@@ -25,14 +25,14 @@ function createTable($mysqli) {
         email VARCHAR(100) NOT NULL UNIQUE
     )";
     if ($mysqli->query($sql) === TRUE) {
-        echo "Table users created successfully\n";
+        echo "Users table created successfully\n";
     } else {
-        echo "Error creating table: " . $mysqli->error . "\n";
+        echo "Error while creating table: " . $mysqli->error . "\n";
     }
 }
-// Function to insert data into the users table
+// The function to read data from a CSV file and insert it into the MySQL users table
 function insertData($mysqli, $filename, $dryRun) {
-    // Open the CSV file
+    // Opening the CSV file
     $file = fopen($filename, "r");
     if (!$file) {
         die("Error: Unable to open file: $filename\n");
@@ -86,17 +86,17 @@ function insertData($mysqli, $filename, $dryRun) {
     // Close the prepared statement
     $stmt->close();
 
-    echo "Data insertion completed\n";
+    echo "Data insertion sucessfully completed\n";
 }
 
-// Connect to MySQL database
+// Connect to MySQL database using the provided command line options
 if (isset($options['database'])) {
     $mysqli = new mysqli($options['h'], $options['u'], $options['p'], $options['database']);
 } else {
     die("Error: MySQL database name not provided\n");
 }
 
-// Check connection
+// Check connection to the MySQL database
 if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error . "\n");
 } else {
@@ -105,15 +105,16 @@ if ($mysqli->connect_error) {
 
 // Check if --create_table option is provided
 if (isset($options['create_table'])) {
+    // If create_table option is provided, call createTable() function to create the users table
     createTable($mysqli);
 }
 
 // Check if --file option is provided
 if (isset($options['file'])) {
-
-    
+    // If file option is provided, insert data from the CSV file into the database
     $filename = $options['file'];
     if (!file_exists($filename)) {
+        // Check if the specified file exists
         die("Error: File not found: $filename\n");
     }
 
@@ -122,10 +123,11 @@ if (isset($options['file'])) {
 
     // Insert data into the users table
     insertData($mysqli, $filename, $dryRun);
-    
+
     // Show users table as a table
     $result = $mysqli->query("SELECT * FROM users");
     if ($result->num_rows > 0) {
+        // If there are rows in the users table, print them as a table
         echo "Users Table:\n";
         echo "-----------------------------------------\n";
         echo "| Name    | Surname | Email             |\n";
@@ -135,9 +137,11 @@ if (isset($options['file'])) {
         }
         echo "-----------------------------------------\n";
     } else {
+        // If there are no rows in the users table, print a message
         echo "No users found in the table\n";
     }
 } else {
+    // If file option is not provided, exit with an error message
     echo "Error: CSV file not provided\n";
 }
 
