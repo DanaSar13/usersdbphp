@@ -2,7 +2,7 @@
 
 ### User Upload Script:
 ```bash
-php user_upload.php --file users.csv --create_table -u root -p Dana1234 -h localhost --database usersdb
+php user_upload.php --file users.csv --create_table -u root -p [DB_Password] -h localhost --database usersdb
 ```
 
 
