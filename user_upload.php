@@ -102,4 +102,16 @@ if ($mysqli->connect_error) {
 } else {
     echo "Connected to MySQL database: " . $options['database'] . "\n";
 }
+
+// Check if --create_table option is provided
+if (isset($options['create_table'])) {
+    createTable($mysqli);
+}
+
+
+
+
+
+
+
 ?>
