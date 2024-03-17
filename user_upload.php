@@ -108,10 +108,41 @@ if (isset($options['create_table'])) {
     createTable($mysqli);
 }
 
+// Check if --file option is provided
+if (isset($options['file'])) {
 
+    
+    $filename = $options['file'];
+    if (!file_exists($filename)) {
+        die("Error: File not found: $filename\n");
+    }
 
+    // Check if --dry_run option is provided
+    $dryRun = isset($options['dry_run']);
 
+    // Insert data into the users table
+    insertData($mysqli, $filename, $dryRun);
+    
+    // Show users table as a table
+    $result = $mysqli->query("SELECT * FROM users");
+    if ($result->num_rows > 0) {
+        echo "Users Table:\n";
+        echo "-----------------------------------------\n";
+        echo "| Name    | Surname | Email             |\n";
+        echo "-----------------------------------------\n";
+        while ($row = $result->fetch_assoc()) {
+            printf("| %-7s | %-7s | %-17s |\n", $row["name"], $row["surname"], $row["email"]);
+        }
+        echo "-----------------------------------------\n";
+    } else {
+        echo "No users found in the table\n";
+    }
+} else {
+    echo "Error: CSV file not provided\n";
+}
 
+// Close MySQL connection
+$mysqli->close();
 
 
 ?>
