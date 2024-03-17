@@ -96,5 +96,10 @@ if (isset($options['database'])) {
     die("Error: MySQL database name not provided\n");
 }
 
-
+// Check connection
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error . "\n");
+} else {
+    echo "Connected to MySQL database: " . $options['database'] . "\n";
+}
 ?>
