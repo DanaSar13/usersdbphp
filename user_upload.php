@@ -88,4 +88,13 @@ function insertData($mysqli, $filename, $dryRun) {
 
     echo "Data insertion completed\n";
 }
+
+// Connect to MySQL database
+if (isset($options['database'])) {
+    $mysqli = new mysqli($options['h'], $options['u'], $options['p'], $options['database']);
+} else {
+    die("Error: MySQL database name not provided\n");
+}
+
+
 ?>
