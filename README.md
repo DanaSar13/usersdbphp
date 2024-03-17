@@ -1,10 +1,10 @@
 ## Instructions:
 
 ### User Upload Script:
+To run the user upload script, execute the following command:
 ```bash
 php user_upload.php --file users.csv --create_table -u root -p [DB_Password] -h localhost --database usersdb
 ```
-
 
 Sample Result of the User Table Update by User Upload Script:
 ```
